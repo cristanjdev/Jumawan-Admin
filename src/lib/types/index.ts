@@ -1,0 +1,10 @@
+export * from './project.types'
+export * from './certificate.types'
+export * from './contact.types'
+export * from './analytics.types'
+export * from './dashboard.types'
+export * from './work-experience.types'
+export * from './tools.types'
+export * from './about.types'
+export * from './skill.types'
+
