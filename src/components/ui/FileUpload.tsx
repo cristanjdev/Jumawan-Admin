@@ -43,11 +43,13 @@ export const FileUpload = ({ onUpload, onRemove, currentImage, folder, className
       return
     }
 
-    // Validate file size (5MB limit)
-    if (file.size > 5 * 1024 * 1024) {
+    // Validate file size (15MB for hero/profile avatar, 5MB for others)
+    const maxSize = folder === 'hero' ? 15 * 1024 * 1024 : 5 * 1024 * 1024
+    const maxLabel = folder === 'hero' ? '15MB' : '5MB'
+    if (file.size > maxSize) {
       toast({
         title: 'File too large',
-        description: 'Please select an image smaller than 5MB',
+        description: `Please select an image smaller than ${maxLabel}`,
         variant: 'destructive'
       })
       return
@@ -199,7 +201,7 @@ export const FileUpload = ({ onUpload, onRemove, currentImage, folder, className
           />
 
           <p className="text-xs text-muted-foreground mt-2">
-            Supported formats: JPG, PNG, GIF, WebP. Max size: 5MB
+            Supported formats: JPG, PNG, GIF, WebP. Max size: {folder === 'hero' ? '15MB' : '5MB'}
           </p>
         </CardContent>
       </Card>

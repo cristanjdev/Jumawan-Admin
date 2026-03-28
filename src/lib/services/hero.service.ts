@@ -107,5 +107,10 @@ export const heroService = {
         const doc = await convexClient.mutation(api.heroSettings.updateProfileImage, { url });
         return mapHero(doc);
     },
+
+    async updateHoverLogo(url: string) {
+        const doc = await convexClient.mutation(api.heroSettings.updateHoverLogo, { url });
+        return mapHero(doc);
+    },
 };
 

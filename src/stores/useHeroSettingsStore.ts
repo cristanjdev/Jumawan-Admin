@@ -7,6 +7,7 @@ interface HeroSettingsState {
     badges: HeroSetting[];
     resume: HeroSetting | null;
     profileImage: HeroSetting | null;
+    hoverLogo: HeroSetting | null;
     loading: boolean;
     error: string | null;
 
@@ -18,6 +19,7 @@ interface HeroSettingsState {
     reorderBadges: (items: { id: string; order_index: number }[]) => Promise<void>;
     updateResume: (url: string) => Promise<HeroSetting>;
     updateProfileImage: (url: string) => Promise<HeroSetting>;
+    updateHoverLogo: (url: string) => Promise<HeroSetting>;
     subscribeToChanges: () => () => void;
 }
 
@@ -26,6 +28,7 @@ export const useHeroSettingsStore = create<HeroSettingsState>((set, get) => ({
     badges: [],
     resume: null,
     profileImage: null,
+    hoverLogo: null,
     loading: false,
     error: null,
 
@@ -35,19 +38,20 @@ export const useHeroSettingsStore = create<HeroSettingsState>((set, get) => ({
             const { data, error } = await heroService.getAll();
 
             if (error) {
-                set({ error: 'Failed to fetch hero settings', settings: [], badges: [], resume: null, profileImage: null });
+                set({ error: 'Failed to fetch hero settings', settings: [], badges: [], resume: null, profileImage: null, hoverLogo: null });
                 return;
             }
 
             const badges = data.filter(s => s.type === 'badge');
             const resume = data.find(s => s.type === 'resume') || null;
             const profileImage = data.find(s => s.type === 'profile_image') || null;
+            const hoverLogo = data.find(s => s.type === 'hover_logo') || null;
 
-            set({ settings: data, badges, resume, profileImage });
+            set({ settings: data, badges, resume, profileImage, hoverLogo });
         } catch (err) {
             console.error('Error fetching hero settings:', err);
             const errorMessage = err instanceof Error ? err.message : 'Failed to fetch hero settings';
-            set({ error: errorMessage, settings: [], badges: [], resume: null, profileImage: null });
+            set({ error: errorMessage, settings: [], badges: [], resume: null, profileImage: null, hoverLogo: null });
         } finally {
             set({ loading: false });
         }
@@ -78,6 +82,7 @@ export const useHeroSettingsStore = create<HeroSettingsState>((set, get) => ({
                     badges: newSettings.filter(s => s.type === 'badge'),
                     resume: newSettings.find(s => s.type === 'resume') || null,
                     profileImage: newSettings.find(s => s.type === 'profile_image') || null,
+                    hoverLogo: newSettings.find(s => s.type === 'hover_logo') || null,
                 };
             });
             return updated;
@@ -97,6 +102,7 @@ export const useHeroSettingsStore = create<HeroSettingsState>((set, get) => ({
                     badges: newSettings.filter(s => s.type === 'badge'),
                     resume: newSettings.find(s => s.type === 'resume') || null,
                     profileImage: newSettings.find(s => s.type === 'profile_image') || null,
+                    hoverLogo: newSettings.find(s => s.type === 'hover_logo') || null,
                 };
             });
         } catch (err) {
@@ -115,6 +121,7 @@ export const useHeroSettingsStore = create<HeroSettingsState>((set, get) => ({
                     badges: newSettings.filter(s => s.type === 'badge'),
                     resume: newSettings.find(s => s.type === 'resume') || null,
                     profileImage: newSettings.find(s => s.type === 'profile_image') || null,
+                    hoverLogo: newSettings.find(s => s.type === 'hover_logo') || null,
                 };
             });
             return updated;
@@ -165,6 +172,7 @@ export const useHeroSettingsStore = create<HeroSettingsState>((set, get) => ({
                     badges: newSettings.filter(s => s.type === 'badge'),
                     resume: updated,
                     profileImage: newSettings.find(s => s.type === 'profile_image') || null,
+                    hoverLogo: newSettings.find(s => s.type === 'hover_logo') || null,
                 };
             });
             return updated;
@@ -192,11 +200,40 @@ export const useHeroSettingsStore = create<HeroSettingsState>((set, get) => ({
                     badges: newSettings.filter(s => s.type === 'badge'),
                     resume: newSettings.find(s => s.type === 'resume') || null,
                     profileImage: updated,
+                    hoverLogo: newSettings.find(s => s.type === 'hover_logo') || null,
                 };
             });
             return updated;
         } catch (err) {
             console.error('Error updating profile image:', err);
+            throw err;
+        }
+    },
+
+    updateHoverLogo: async (url) => {
+        try {
+            const updated = await heroService.updateHoverLogo(url);
+            set((state) => {
+                const existing = state.settings.find(s => s.type === 'hover_logo');
+                let newSettings: HeroSetting[];
+
+                if (existing) {
+                    newSettings = state.settings.map(s => s.id === updated.id ? updated : s);
+                } else {
+                    newSettings = [...state.settings, updated];
+                }
+
+                return {
+                    settings: newSettings,
+                    badges: newSettings.filter(s => s.type === 'badge'),
+                    resume: newSettings.find(s => s.type === 'resume') || null,
+                    profileImage: newSettings.find(s => s.type === 'profile_image') || null,
+                    hoverLogo: updated,
+                };
+            });
+            return updated;
+        } catch (err) {
+            console.error('Error updating hover logo:', err);
             throw err;
         }
     },

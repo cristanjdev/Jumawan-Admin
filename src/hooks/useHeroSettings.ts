@@ -15,6 +15,7 @@ export function useHeroSettings() {
         badges: store.badges,
         resume: store.resume,
         profileImage: store.profileImage,
+        hoverLogo: store.hoverLogo,
         loading: store.loading,
         error: store.error,
         createBadge: store.createBadge,
@@ -24,6 +25,7 @@ export function useHeroSettings() {
         reorderBadges: store.reorderBadges,
         updateResume: store.updateResume,
         updateProfileImage: store.updateProfileImage,
+        updateHoverLogo: store.updateHoverLogo,
         refetch: store.fetchSettings,
     };
 }

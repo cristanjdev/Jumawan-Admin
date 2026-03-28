@@ -1,6 +1,6 @@
 export interface HeroSetting {
     id: string;
-    type: 'badge' | 'resume' | 'profile_image';
+    type: 'badge' | 'resume' | 'profile_image' | 'hover_logo';
     value: string;
     order_index: number;
     is_active: boolean;
@@ -18,6 +18,10 @@ export interface HeroResume extends HeroSetting {
 
 export interface HeroProfileImage extends HeroSetting {
     type: 'profile_image';
+}
+
+export interface HeroHoverLogo extends HeroSetting {
+    type: 'hover_logo';
 }
 
 export interface CreateHeroBadgeInput {

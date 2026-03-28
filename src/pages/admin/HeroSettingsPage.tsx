@@ -27,6 +27,7 @@ export function HeroSettingsPage() {
         badges,
         resume,
         profileImage,
+        hoverLogo,
         loading,
         error,
         createBadge,
@@ -35,6 +36,7 @@ export function HeroSettingsPage() {
         toggleActive,
         updateResume,
         updateProfileImage,
+        updateHoverLogo,
     } = useHeroSettings();
 
     const {
@@ -282,6 +284,38 @@ export function HeroSettingsPage() {
         }
     };
 
+    const handleHoverLogoUpload = async (url: string) => {
+        try {
+            await updateHoverLogo(url);
+            toast({
+                title: 'Success',
+                description: 'Hover logo updated successfully',
+            });
+        } catch {
+            toast({
+                title: 'Error',
+                description: 'Failed to save hover logo',
+                variant: 'destructive',
+            });
+        }
+    };
+
+    const handleHoverLogoRemove = async () => {
+        try {
+            await updateHoverLogo('');
+            toast({
+                title: 'Removed',
+                description: 'Hover logo removed',
+            });
+        } catch {
+            toast({
+                title: 'Error',
+                description: 'Failed to remove hover logo',
+                variant: 'destructive',
+            });
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
@@ -325,7 +359,32 @@ export function HeroSettingsPage() {
                     </CardContent>
                 </Card>
 
-                {/* Resume Section */}
+                {/* Hover Logo Section */}
+                <Card className="bg-navy-800 border-navy-700">
+                    <CardHeader>
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-blue-500/10">
+                                <ImageIcon className="w-5 h-5 text-blue-400" />
+                            </div>
+                            <div>
+                                <CardTitle className="text-white">Avatar Hover Logo</CardTitle>
+                                <CardDescription>Logo shown when hovering over the profile avatar (e.g. BluTech)</CardDescription>
+                            </div>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <FileUpload
+                            folder="hero"
+                            currentImage={hoverLogo?.value}
+                            onUpload={handleHoverLogoUpload}
+                            onRemove={handleHoverLogoRemove}
+                        />
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Resume Section - Full Width */}
+            <div className="grid gap-6 lg:grid-cols-2">
                 <Card className="bg-navy-800 border-navy-700">
                     <CardHeader>
                         <div className="flex items-center gap-3">
