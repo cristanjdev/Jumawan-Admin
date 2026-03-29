@@ -78,7 +78,6 @@ export const useCertificateStore = create<CertificateState>((set, get) => ({
     },
 
     subscribeToChanges: () => {
-        const interval = setInterval(() => { get().fetchCertificates(); }, 30000);
-        return () => { clearInterval(interval); };
+        return () => {};
     },
 }));

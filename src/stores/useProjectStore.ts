@@ -78,8 +78,7 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     },
 
     subscribeToChanges: () => {
-        // Convex handles reactivity automatically; poll as fallback
-        const interval = setInterval(() => { get().fetchProjects(); }, 30000);
-        return () => { clearInterval(interval); };
+        // Convex handles reactivity automatically; no polling needed
+        return () => {};
     },
 }));

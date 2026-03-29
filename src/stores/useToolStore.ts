@@ -94,7 +94,6 @@ export const useToolStore = create<ToolState>((set, get) => ({
     },
 
     subscribeToChanges: () => {
-        const interval = setInterval(() => { get().fetchTools(); }, 30000);
-        return () => { clearInterval(interval); };
+        return () => {};
     },
 }));

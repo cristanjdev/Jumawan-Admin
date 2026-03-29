@@ -239,8 +239,8 @@ export const useHeroSettingsStore = create<HeroSettingsState>((set, get) => ({
     },
 
     subscribeToChanges: () => {
-        const interval = setInterval(() => { get().fetchSettings(); }, 30000);
-        return () => { clearInterval(interval); };
+        // No polling needed — store state is updated directly by mutations
+        return () => {};
     },
 }));
 

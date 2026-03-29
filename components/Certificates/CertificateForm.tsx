@@ -20,6 +20,7 @@ export const CertificateForm = ({ certificate, onSubmit, onCancel, isLoading }: 
     issue_date: '',
     credential_id: '',
     credential_url: '',
+    verification_image_url: '',
     image_url: '',
     description: '',
     order_index: 0
@@ -33,6 +34,7 @@ export const CertificateForm = ({ certificate, onSubmit, onCancel, isLoading }: 
         issue_date: certificate.issue_date,
         credential_id: certificate.credential_id || '',
         credential_url: certificate.credential_url || '',
+        verification_image_url: certificate.verification_image_url || '',
         image_url: certificate.image_url || '',
         description: certificate.description || '',
         order_index: certificate.order_index
@@ -115,6 +117,17 @@ export const CertificateForm = ({ certificate, onSubmit, onCancel, isLoading }: 
             className="bg-navy-700 border-navy-600 text-white h-9"
           />
         </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-white text-sm font-medium">Verification Proof Image</Label>
+        <p className="text-xs text-muted-foreground">Upload an image as proof of verification (optional, used if no URL is provided)</p>
+        <FileUpload
+          onUpload={(url) => setFormData({ ...formData, verification_image_url: url })}
+          onRemove={() => setFormData({ ...formData, verification_image_url: '' })}
+          currentImage={formData.verification_image_url}
+          folder="certificates"
+        />
       </div>
 
       <div className="space-y-2">

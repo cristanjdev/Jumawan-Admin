@@ -78,7 +78,6 @@ export const useExperienceStore = create<ExperienceState>((set, get) => ({
     },
 
     subscribeToChanges: () => {
-        const interval = setInterval(() => { get().fetchExperiences(); }, 30000);
-        return () => { clearInterval(interval); };
+        return () => {};
     },
 }));
