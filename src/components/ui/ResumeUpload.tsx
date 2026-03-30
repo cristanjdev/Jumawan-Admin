@@ -22,8 +22,20 @@ export const ResumeUpload = ({ onUpload, onRemove, currentFile, className, label
     const fileInputRef = useRef<HTMLInputElement>(null)
     const { toast } = useToast()
 
-    // Extract filename from URL if currentFile is provided
-    const displayName = fileName || (currentFile ? currentFile.split('/').pop() : null)
+    // Extract display name: prefer filename param encoded in URL, then fall back to raw file.name state
+    const getDisplayName = (): string | null => {
+        if (fileName) return fileName;
+        if (!currentFile) return null;
+        try {
+            const parsed = new URL(currentFile);
+            const encoded = parsed.searchParams.get('filename');
+            if (encoded) return decodeURIComponent(encoded);
+        } catch { /* not a full URL */ }
+        // Legacy fallback: extract last path segment (avoids showing raw query string)
+        const lastSegment = currentFile.split('/').pop()?.split('?')[0];
+        return lastSegment || null;
+    };
+    const displayName = getDisplayName();
 
     const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0]
@@ -72,9 +84,10 @@ export const ResumeUpload = ({ onUpload, onRemove, currentFile, className, label
 
             const { storageId } = await result.json()
 
-            // Construct the public URL via Convex HTTP endpoint
+            // Build URL using the dedicated /downloadByStorageId endpoint.
+            // Encode the original filename so the display and download both use the real name.
             const siteUrl = import.meta.env.VITE_CONVEX_SITE_URL || 'https://fearless-pelican-308.convex.site'
-            const publicUrl = `${siteUrl}/getImage?storageId=${storageId}`
+            const publicUrl = `${siteUrl}/downloadByStorageId?storageId=${storageId}&filename=${encodeURIComponent(file.name)}`
 
             onUpload(publicUrl)
         } catch (error) {
