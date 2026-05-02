@@ -17,6 +17,7 @@ import type * as files from "../files.js";
 import type * as heroSettings from "../heroSettings.js";
 import type * as http from "../http.js";
 import type * as projects from "../projects.js";
+import type * as seedProjects from "../seedProjects.js";
 import type * as skillCategories from "../skillCategories.js";
 import type * as tools from "../tools.js";
 import type * as workExperience from "../workExperience.js";
@@ -37,6 +38,7 @@ declare const fullApi: ApiFromModules<{
   heroSettings: typeof heroSettings;
   http: typeof http;
   projects: typeof projects;
+  seedProjects: typeof seedProjects;
   skillCategories: typeof skillCategories;
   tools: typeof tools;
   workExperience: typeof workExperience;
