@@ -11,7 +11,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "convex/_generated": path.resolve(__dirname, "../Jumawan/convex/_generated"),
+      "convex/_generated": path.resolve(__dirname, "./convex/_generated"),
     },
   },
 });
