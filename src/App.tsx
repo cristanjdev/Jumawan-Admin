@@ -14,6 +14,7 @@ import { useAuthStore } from "@/stores/useAuthStore"
 const AdminDashboard = lazy(() => import("./pages/admin/DashboardPage").then(module => ({ default: module.DashboardPage })))
 const ProjectsManagement = lazy(() => import("./pages/admin/ProjectsPage").then(module => ({ default: module.ProjectsPage })))
 const CertificatesManagement = lazy(() => import("./pages/admin/CertificatesPage").then(module => ({ default: module.CertificatesPage })))
+const EducationManagement = lazy(() => import("./pages/admin/EducationPage").then(module => ({ default: module.EducationPage })))
 const WorkExperienceManagement = lazy(() => import("./pages/admin/WorkExperiencePage").then(module => ({ default: module.WorkExperiencePage })))
 const ToolsManagement = lazy(() => import("./pages/admin/ToolsPage").then(module => ({ default: module.ToolsPage })))
 const ContactManagement = lazy(() => import("./pages/admin/ContactPage").then(module => ({ default: module.ContactPage })))
@@ -100,6 +101,15 @@ const App = () => {
                 <AdminLayout>
                   <Suspense fallback={<AdminLoadingSpinner />}>
                     <WorkExperienceManagement />
+                  </Suspense>
+                </AdminLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/education" element={
+              <ProtectedRoute>
+                <AdminLayout>
+                  <Suspense fallback={<AdminLoadingSpinner />}>
+                    <EducationManagement />
                   </Suspense>
                 </AdminLayout>
               </ProtectedRoute>

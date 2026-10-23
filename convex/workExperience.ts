@@ -36,6 +36,8 @@ export const create = mutation({
     technologies: v.array(v.string()),
     team_size: v.optional(v.string()),
     company_size: v.optional(v.string()),
+    // Photo for the experience card (uploaded from the admin)
+    image_url: v.optional(v.string()),
     order_index: v.number(),
   },
   handler: async (ctx, args) => {
@@ -67,6 +69,8 @@ export const update = mutation({
     technologies: v.optional(v.array(v.string())),
     team_size: v.optional(v.string()),
     company_size: v.optional(v.string()),
+    // Photo for the experience card (uploaded from the admin)
+    image_url: v.optional(v.string()),
     order_index: v.optional(v.number()),
   },
   handler: async (ctx, args) => {

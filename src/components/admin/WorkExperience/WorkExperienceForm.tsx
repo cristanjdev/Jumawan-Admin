@@ -6,6 +6,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { FileUpload } from '@/components/ui/FileUpload'
 import { WorkExperience, WorkExperienceFormData } from '@/lib/types'
 
 interface WorkExperienceFormProps {
@@ -30,6 +31,7 @@ export const WorkExperienceForm = ({ experience, onSubmit, onCancel, isLoading }
     technologies: [],
     team_size: '',
     company_size: '',
+    image_url: '',
     order_index: 0
   })
   const [achievementInput, setAchievementInput] = useState('')
@@ -52,6 +54,7 @@ export const WorkExperienceForm = ({ experience, onSubmit, onCancel, isLoading }
         technologies: experience.technologies,
         team_size: experience.team_size || '',
         company_size: experience.company_size || '',
+        image_url: experience.image_url || '',
         order_index: experience.order_index
       })
     }
@@ -212,6 +215,14 @@ export const WorkExperienceForm = ({ experience, onSubmit, onCancel, isLoading }
           className="bg-navy-700 border-navy-600 text-white h-9"
         />
       </div>
+
+      <FileUpload
+        onUpload={(url) => setFormData({ ...formData, image_url: url })}
+        onRemove={() => setFormData({ ...formData, image_url: '' })}
+        currentImage={formData.image_url}
+        folder="experience"
+        className="space-y-2"
+      />
 
       <div className="space-y-2">
         <Label className="text-white text-sm font-medium">Achievements</Label>

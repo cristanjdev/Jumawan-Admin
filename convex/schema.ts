@@ -80,6 +80,31 @@ export default defineSchema({
     technologies: v.array(v.string()),
     team_size: v.optional(v.string()),
     company_size: v.optional(v.string()),
+    // Photo for the experience card (uploaded from the admin)
+    image_url: v.optional(v.string()),
+    order_index: v.number(),
+  }).index("by_order", ["order_index"]),
+
+  education: defineTable({
+    degree: v.string(),
+    level: v.string(),
+    school: v.string(),
+    location: v.string(),
+    period: v.string(),
+    gpa: v.string(),
+    status: v.string(),
+    honors: v.optional(v.string()),
+    description: v.string(),
+    coursework: v.array(v.string()),
+    achievements: v.array(
+      v.object({
+        title: v.string(),
+        detail: v.optional(v.string()),
+        group: v.union(v.literal("Recognition"), v.literal("Leadership & activities")),
+      })
+    ),
+    // Photo for the education card (uploaded from the admin)
+    image_url: v.optional(v.string()),
     order_index: v.number(),
   }).index("by_order", ["order_index"]),
 

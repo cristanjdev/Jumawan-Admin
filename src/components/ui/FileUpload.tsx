@@ -12,7 +12,7 @@ interface FileUploadProps {
   onUpload: (url: string) => void
   onRemove?: () => void
   currentImage?: string
-  folder: 'projects' | 'certificates' | 'profile' | 'tools' | 'hero' | 'about'
+  folder: 'projects' | 'experience' | 'education' | 'certificates' | 'profile' | 'tools' | 'hero' | 'about'
   className?: string
 }
 

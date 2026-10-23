@@ -13,6 +13,7 @@ export interface WorkExperience {
   technologies: string[]
   team_size?: string
   company_size?: string
+  image_url?: string
   order_index: number
   created_at: string
   updated_at: string
@@ -32,6 +33,7 @@ export interface WorkExperienceFormData {
   technologies: string[]
   team_size: string
   company_size: string
+  image_url: string
   order_index: number
 }
 
