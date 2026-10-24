@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { HeroSetting, CreateHeroBadgeInput, UpdateHeroSettingInput } from '@/lib/types/hero.types';
 import { heroService } from '@/lib/services/hero.service';
+import type { PortraitStyle } from '@/lib/portrait-styles';
 
 interface HeroSettingsState {
     settings: HeroSetting[];
@@ -8,6 +9,10 @@ interface HeroSettingsState {
     resume: HeroSetting | null;
     profileImage: HeroSetting | null;
     hoverLogo: HeroSetting | null;
+    /** Which 3D portrait the portfolio hero shows */
+    portraitStyle: HeroSetting | null;
+    /** Depth map of the profile photo, for the "depth" portrait style */
+    depthMap: HeroSetting | null;
     loading: boolean;
     error: string | null;
 
@@ -20,6 +25,8 @@ interface HeroSettingsState {
     updateResume: (url: string) => Promise<HeroSetting>;
     updateProfileImage: (url: string) => Promise<HeroSetting>;
     updateHoverLogo: (url: string) => Promise<HeroSetting>;
+    updatePortraitStyle: (style: PortraitStyle) => Promise<HeroSetting>;
+    updateDepthMap: (url: string) => Promise<HeroSetting>;
     subscribeToChanges: () => () => void;
 }
 
@@ -29,6 +36,8 @@ export const useHeroSettingsStore = create<HeroSettingsState>((set, get) => ({
     resume: null,
     profileImage: null,
     hoverLogo: null,
+    portraitStyle: null,
+    depthMap: null,
     loading: false,
     error: null,
 
@@ -46,8 +55,10 @@ export const useHeroSettingsStore = create<HeroSettingsState>((set, get) => ({
             const resume = data.find(s => s.type === 'resume') || null;
             const profileImage = data.find(s => s.type === 'profile_image') || null;
             const hoverLogo = data.find(s => s.type === 'hover_logo') || null;
+            const portraitStyle = data.find(s => s.type === 'portrait_style') || null;
+            const depthMap = data.find(s => s.type === 'depth_map') || null;
 
-            set({ settings: data, badges, resume, profileImage, hoverLogo });
+            set({ settings: data, badges, resume, profileImage, hoverLogo, portraitStyle, depthMap });
         } catch (err) {
             console.error('Error fetching hero settings:', err);
             const errorMessage = err instanceof Error ? err.message : 'Failed to fetch hero settings';
@@ -238,9 +249,44 @@ export const useHeroSettingsStore = create<HeroSettingsState>((set, get) => ({
         }
     },
 
+    updatePortraitStyle: async (style) => {
+        try {
+            const updated = await heroService.updatePortraitStyle(style);
+            set((state) => ({
+                settings: replaceOrAdd(state.settings, updated),
+                portraitStyle: updated,
+            }));
+            return updated;
+        } catch (err) {
+            console.error('Error updating portrait style:', err);
+            throw err;
+        }
+    },
+
+    updateDepthMap: async (url) => {
+        try {
+            const updated = await heroService.updateDepthMap(url);
+            set((state) => ({
+                settings: replaceOrAdd(state.settings, updated),
+                depthMap: updated,
+            }));
+            return updated;
+        } catch (err) {
+            console.error('Error updating depth map:', err);
+            throw err;
+        }
+    },
+
     subscribeToChanges: () => {
         // No polling needed — store state is updated directly by mutations
         return () => {};
     },
 }));
+
+/** The settings list with `updated` in place of its old version, or added if it is new */
+function replaceOrAdd(settings: HeroSetting[], updated: HeroSetting) {
+    return settings.some(s => s.id === updated.id)
+        ? settings.map(s => s.id === updated.id ? updated : s)
+        : [...settings, updated];
+}
 

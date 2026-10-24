@@ -16,6 +16,8 @@ export function useHeroSettings() {
         resume: store.resume,
         profileImage: store.profileImage,
         hoverLogo: store.hoverLogo,
+        portraitStyle: store.portraitStyle,
+        depthMap: store.depthMap,
         loading: store.loading,
         error: store.error,
         createBadge: store.createBadge,
@@ -26,6 +28,8 @@ export function useHeroSettings() {
         updateResume: store.updateResume,
         updateProfileImage: store.updateProfileImage,
         updateHoverLogo: store.updateHoverLogo,
+        updatePortraitStyle: store.updatePortraitStyle,
+        updateDepthMap: store.updateDepthMap,
         refetch: store.fetchSettings,
     };
 }

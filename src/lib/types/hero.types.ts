@@ -1,6 +1,6 @@
 export interface HeroSetting {
     id: string;
-    type: 'badge' | 'resume' | 'profile_image' | 'hover_logo';
+    type: 'badge' | 'resume' | 'profile_image' | 'hover_logo' | 'portrait_style' | 'depth_map';
     value: string;
     order_index: number;
     is_active: boolean;

@@ -2,6 +2,7 @@ import { convexClient } from '@/lib/convexClient';
 import { api } from 'convex/_generated/api';
 import { HeroSetting, CreateHeroBadgeInput, CreateHeroResumeInput, CreateHeroProfileImageInput, UpdateHeroSettingInput } from '@/lib/types/hero.types';
 import { Id } from 'convex/_generated/dataModel';
+import type { PortraitStyle } from '@/lib/portrait-styles';
 
 function mapHero(doc: any): HeroSetting {
     return {
@@ -110,6 +111,16 @@ export const heroService = {
 
     async updateHoverLogo(url: string) {
         const doc = await convexClient.mutation(api.heroSettings.updateHoverLogo, { url });
+        return mapHero(doc);
+    },
+
+    async updatePortraitStyle(style: PortraitStyle) {
+        const doc = await convexClient.mutation(api.heroSettings.updatePortraitStyle, { style });
+        return mapHero(doc);
+    },
+
+    async updateDepthMap(url: string) {
+        const doc = await convexClient.mutation(api.heroSettings.updateDepthMap, { url });
         return mapHero(doc);
     },
 };

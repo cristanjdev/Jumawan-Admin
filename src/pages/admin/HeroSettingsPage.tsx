@@ -9,9 +9,11 @@ import {
     DialogTitle,
     DialogTrigger
 } from '@/components/ui/dialog';
-import { Plus, FileText, Tag, User, ImageIcon } from 'lucide-react';
+import { Plus, FileText, Tag, User, ImageIcon, Sparkles, Layers } from 'lucide-react';
 import { HeroBadgeList } from '@/components/admin/HeroSettings/HeroBadgeList';
 import { HeroBadgeForm } from '@/components/admin/HeroSettings/HeroBadgeForm';
+import { PortraitStylePicker } from '@/components/admin/HeroSettings/PortraitStylePicker';
+import { DEFAULT_PORTRAIT_STYLE, PORTRAIT_STYLES, isPortraitStyle, type PortraitStyle } from '@/lib/portrait-styles';
 import { AboutImageList } from '@/components/admin/HeroSettings/AboutImageList';
 import { AboutImageForm } from '@/components/admin/HeroSettings/AboutImageForm';
 import { FileUpload } from '@/components/ui/FileUpload';
@@ -28,6 +30,8 @@ export function HeroSettingsPage() {
         resume,
         profileImage,
         hoverLogo,
+        portraitStyle,
+        depthMap,
         loading,
         error,
         createBadge,
@@ -37,6 +41,8 @@ export function HeroSettingsPage() {
         updateResume,
         updateProfileImage,
         updateHoverLogo,
+        updatePortraitStyle,
+        updateDepthMap,
     } = useHeroSettings();
 
     const {
@@ -55,7 +61,9 @@ export function HeroSettingsPage() {
     const [editingAboutImage, setEditingAboutImage] = useState<AboutSectionImage | null>(null);
     const [formLoading, setFormLoading] = useState(false);
     const [aboutFormLoading, setAboutFormLoading] = useState(false);
+    const [savingStyle, setSavingStyle] = useState<PortraitStyle | null>(null);
     const { toast } = useToast();
+    const currentStyle = isPortraitStyle(portraitStyle?.value) ? portraitStyle.value : DEFAULT_PORTRAIT_STYLE;
 
     // Show error message if table doesn't exist
     if (error && !loading) {
@@ -316,6 +324,57 @@ export function HeroSettingsPage() {
         }
     };
 
+    const handlePortraitStyleChange = async (style: PortraitStyle) => {
+        setSavingStyle(style);
+        try {
+            await updatePortraitStyle(style);
+            toast({
+                title: 'Portrait style updated',
+                description: `The portfolio now shows: ${PORTRAIT_STYLES.find(s => s.id === style)?.name}`,
+            });
+        } catch {
+            toast({
+                title: 'Error',
+                description: 'Failed to save portrait style',
+                variant: 'destructive',
+            });
+        } finally {
+            setSavingStyle(null);
+        }
+    };
+
+    const handleDepthMapUpload = async (url: string) => {
+        try {
+            await updateDepthMap(url);
+            toast({
+                title: 'Success',
+                description: 'Depth map updated successfully',
+            });
+        } catch {
+            toast({
+                title: 'Error',
+                description: 'Failed to save depth map',
+                variant: 'destructive',
+            });
+        }
+    };
+
+    const handleDepthMapRemove = async () => {
+        try {
+            await updateDepthMap('');
+            toast({
+                title: 'Removed',
+                description: 'Depth map removed',
+            });
+        } catch {
+            toast({
+                title: 'Error',
+                description: 'Failed to remove depth map',
+                variant: 'destructive',
+            });
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
@@ -367,8 +426,8 @@ export function HeroSettingsPage() {
                                 <ImageIcon className="w-5 h-5 text-blue-400" />
                             </div>
                             <div>
-                                <CardTitle className="text-white">Avatar Hover Logo</CardTitle>
-                                <CardDescription>Logo shown when hovering over the profile avatar (e.g. BluTech)</CardDescription>
+                                <CardTitle className="text-white">Brand Logo</CardTitle>
+                                <CardDescription>Your logo (e.g. BluTech), used on the coin's back and the ID badge portrait styles</CardDescription>
                             </div>
                         </div>
                     </CardHeader>
@@ -383,7 +442,28 @@ export function HeroSettingsPage() {
                 </Card>
             </div>
 
-            {/* Resume Section - Full Width */}
+            {/* Portrait Style */}
+            <Card className="bg-navy-800 border-navy-700">
+                <CardHeader>
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-cyan-500/10">
+                            <Sparkles className="w-5 h-5 text-cyan-400" />
+                        </div>
+                        <div>
+                            <CardTitle className="text-white">Portrait Style</CardTitle>
+                            <CardDescription>
+                                The 3D design of your photo in the hero. Changes show on the live site right away.
+                                To preview one first, open the portfolio with <code className="bg-navy-900 px-1.5 py-0.5 rounded">?portrait=coin</code> (or any style id).
+                            </CardDescription>
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <PortraitStylePicker value={currentStyle} onChange={handlePortraitStyleChange} saving={savingStyle} />
+                </CardContent>
+            </Card>
+
+            {/* Resume and depth map */}
             <div className="grid gap-6 lg:grid-cols-2">
                 <Card className="bg-navy-800 border-navy-700">
                     <CardHeader>
@@ -403,6 +483,33 @@ export function HeroSettingsPage() {
                             onUpload={handleResumeUpload}
                             onRemove={handleResumeRemove}
                             label="Resume / CV File"
+                        />
+                    </CardContent>
+                </Card>
+
+                {/* Depth map for the "3D photo" style */}
+                <Card className="bg-navy-800 border-navy-700">
+                    <CardHeader>
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-indigo-500/10">
+                                <Layers className="w-5 h-5 text-indigo-400" />
+                            </div>
+                            <div>
+                                <CardTitle className="text-white">Depth Map</CardTitle>
+                                <CardDescription>
+                                    For the "3D photo" style: a grayscale image of your profile photo where near is white and far is black,
+                                    the same size as the photo. Make one with any free depth-map tool (e.g. Depth Anything). Without it, that
+                                    style uses a gentle built-in depth.
+                                </CardDescription>
+                            </div>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <FileUpload
+                            folder="hero"
+                            currentImage={depthMap?.value}
+                            onUpload={handleDepthMapUpload}
+                            onRemove={handleDepthMapRemove}
                         />
                     </CardContent>
                 </Card>
