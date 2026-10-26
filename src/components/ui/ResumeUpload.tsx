@@ -86,7 +86,7 @@ export const ResumeUpload = ({ onUpload, onRemove, currentFile, className, label
 
             // Build URL using the dedicated /downloadByStorageId endpoint.
             // Encode the original filename so the display and download both use the real name.
-            const siteUrl = import.meta.env.VITE_CONVEX_SITE_URL || 'https://fearless-pelican-308.convex.site'
+            const siteUrl = import.meta.env.VITE_CONVEX_SITE_URL || 'https://careful-wildcat-190.convex.site'
             const publicUrl = `${siteUrl}/downloadByStorageId?storageId=${storageId}&filename=${encodeURIComponent(file.name)}`
 
             onUpload(publicUrl)

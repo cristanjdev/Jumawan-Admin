@@ -85,7 +85,7 @@ export const FileUpload = ({ onUpload, onRemove, currentImage, folder, className
       const { storageId } = await result.json()
 
       // Construct the public URL via Convex HTTP endpoint
-      const siteUrl = import.meta.env.VITE_CONVEX_SITE_URL || 'https://fearless-pelican-308.convex.site'
+      const siteUrl = import.meta.env.VITE_CONVEX_SITE_URL || 'https://careful-wildcat-190.convex.site'
       const publicUrl = `${siteUrl}/getImage?storageId=${storageId}`
 
       onUpload(publicUrl)
