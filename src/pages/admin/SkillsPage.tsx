@@ -42,7 +42,7 @@ export function SkillsPage() {
         setDialogOpen(true);
     };
 
-    const handleFormSubmit = async (data: { title: string; icon_slug: string; color_slug: string; skills: string[] }) => {
+    const handleFormSubmit = async (data: { title: string; icon_slug: string; color_slug: string; skills: string[]; description: string; examples: string[] }) => {
         setFormLoading(true);
         try {
             if (editing) {
